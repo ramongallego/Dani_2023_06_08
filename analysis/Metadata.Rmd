@@ -1,0 +1,36 @@
+---
+title: "Metadata"
+output: html_notebook
+---
+Import the metadata and change it so it works with my pipeline
+
+```{r}
+library(tidyverse)
+library (here)
+```
+
+```{r}
+Barcodes <- read_csv(here("data","Barcodes.csv"))
+
+Barcodes |> 
+  rename(Name.p7 = barcode,
+         Well.p7 = Posillo, 
+         barcode.p5 = index,
+        
+         Name.p5 = barcode2,
+         sample_id = muestra,
+        
+         barcode.p7 = index2) |> 
+  mutate(  Well.p5 = Well.p7,
+           plate_name.p5 = sample_id,
+          PrimerF = "AGAGTTTGATCCTGGCTCAG",
+         PrimerR = "GGTTACCTTGTTACGACTT",
+         file = "all.fastq",
+         Locus = "16S_long",
+         Sequence.p5 = paste0("AATGATACGGCGACCACCGAGATCTACAC", Name.p5),
+         Sequence.p7 = paste0("CAAGCAGAAGACGGCATACGAGAT", Name.p7, "GTCTCGTGGGCTCGG")) -> Barcodes
+
+Barcodes |> 
+  write_csv(here("data","metadata_david.csv"))
+```
+
