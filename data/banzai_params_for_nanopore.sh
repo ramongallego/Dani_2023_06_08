@@ -6,10 +6,10 @@
 ################################################################################
 # What is the file path to the directory containing all of the libraries/reads?
 
-PARENT_DIR="/mnt/c/Users/RG.5015511/Documents/Projects/David_Duran_Nanopore/data/fastq"
+PARENT_DIR="/mnt/c/Users/RG.5015511/Documents/Projects/Dani_2023_06_08/data/fastq"
 
 # Where is the sequencing metadata file? (SEE FORMATTING GUIDELINES IN README!)
-SEQUENCING_METADATA="${PARENT_DIR}"/metadata_david.csv
+SEQUENCING_METADATA="${PARENT_DIR}"/metadata_2023-06-22.csv
 
 
 
@@ -18,7 +18,7 @@ SEQUENCING_METADATA="${PARENT_DIR}"/metadata_david.csv
 ################################################################################
 # This script will generate a directory (folder) containing the output of the script.
 # Where do you want this new folder to go?
-OUTPUT_DIRECTORY="/mnt/c/Users/RG.5015511/Documents/Projects/David_Duran_Nanopore/pipeline_output" #"${PARENT_DIR%/*}"
+OUTPUT_DIRECTORY="/mnt/c/Users/RG.5015511/Documents/Projects/Dani_2023_06_08/pipeline_output" #"${PARENT_DIR%/*}"
 
 
 ################################################################################
@@ -29,12 +29,12 @@ COLNAME_FILE1="file"
 #COLNAME_FILE2="file2"
 
 # MUST be unique for each row!
-COLNAME_SAMPLE_ID="sample_id"
+COLNAME_SAMPLE_ID="Sample_name"
 
 
 # Your metadata must have a column corresponding to the subfolders containing the raw reads.
 # In order to make this flexible across both multiple and single library preps, you must include this even if you only sequenced one library (sorry!).
-COLNAME_ID1_NAME="plate_name.p7"
+COLNAME_ID1_NAME="Name.p7"
 COLNAME_ID1_SEQ="barcode.p7"
 
 #################################################################################
@@ -60,7 +60,7 @@ SECONDARY_INDEX="YES"
 # these are the secondary index -- the primary index added with the sequencing adapters should not be in the sequence data
 # You can grab these from the file specified above (SEQUENCING_METADATA) by specifying the column name of index sequences.
 COLNAME_ID2_SEQ="barcode.p5"
-COLNAME_ID2_WELL="Well.p5"
+COLNAME_ID2_WELL="Name.p5"
 
 # How many nucleotides pad the 5' end of the tag sequence?
 # TODO build in flexibility (this number is unused right now)

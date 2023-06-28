@@ -304,7 +304,7 @@ awk -F','  -v FWD=$COLNUM_PRIMER1 -v LOCI=$COLNUM_LOCUS \
 
 
 	  mkdir "${DEMULT_DIR}"/"${FILE1[i]}"
-		mkdir "${FINAL_DIR}"/"${FILE1[i]}"
+	  mkdir "${FINAL_DIR}"/"${FILE1[i]}"
 
 
 
@@ -317,13 +317,20 @@ awk -F','  -v FWD=$COLNUM_PRIMER1 -v LOCI=$COLNUM_LOCUS \
 	# by using the anchor sequence
 
 	echo ""
-	echo "Using cutadapt to select by sequence length, reorient sequences and trim them to the anchor"
-	echo "this might take a while"
+	echo "Using cutadapt to select by sequence length, reorient sequences and trim them to the Forward Primer."
+	echo "Then create a fasta with the sequence BEFORE the primer and demultiplex it. this might take a while"
 	# Did it using a pipe cutadapt as it is a notch quicker to filter first and find and reverse later
-	cutadapt -m "${MIN_LENGTH}" -M "${MAX_LENGTH}" "${READ1}" --cores="${N_CORES}" | cutadapt -g "AATGATACGGCGACCACCGAGATCTACAC;min_overlap=10" -o "${READ1}".anchored.fastq \
-	--quiet --untrimmed-output "${READ1}".unanchored.fastq -e 0.3 - --rc --cores="${N_CORES}"
+	cutadapt -m "${MIN_LENGTH}" -M "${MAX_LENGTH}" "${READ1}" --cores="${N_CORES}" | \
+	cutadapt -g ""${PRIMER1}";min_overlap=20" -o "${READ1}".anchored.fastq \
+	--quiet --untrimmed-output "${READ1}".unanchored.fastq -e 0.3 - --rc --cores="${N_CORES}" --info-file - | \
+	awk -F'\t' -v COLNAME=2 -v VALUE="-1" ' {if ($COLNAME != VALUE ) {printf ">%s\n%s\n", $1,$5 } }'   > "${DEMULT_DIR}"/"${FILE1[i]}"/FOR.FIRST.DEMULT.fasta
+	
+	 
+	cutadapt -g "file:"${Barcodes_file}";min_overlap=6" -o /dev/null --cores 16 --quiet  "${DEMULT_DIR}"/"${FILE1[i]}"/FOR.FIRST.DEMULT.fasta --info-file -  | \
+ 	awk -F'\t' -v FILE="${DEMULT_DIR}"/"${FILE1[i]}" ' {print $1  > (FILE"/"$8".txt")}'
 
-	 cutadapt -g "AATGATACGGCGACCACCGAGATCTACAC;min_overlap=10" -o "${READ1}".anchored_second_round.fastq \
+
+	cutadapt -g "AATGATACGGCGACCACCGAGATCTACAC;min_overlap=29" -o "${READ1}".anchored_second_round.fastq \
 	"${READ1}".unanchored.fastq -e 0.33 --rc --cores="${N_CORES}" --discard-untrimmed
 
   echo "Number of sequences to begin with"
